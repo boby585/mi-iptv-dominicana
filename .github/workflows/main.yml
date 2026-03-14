@@ -1,8 +1,5 @@
 name: Actualizar Token Color Vision
 
-permissions:
-  contents: write
-
 on:
   schedule:
     - cron: '0 */3 * * *'
@@ -11,14 +8,16 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          persist-credentials: true  # Esto mantiene los permisos activos
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configurar Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -30,8 +29,8 @@ jobs:
 
       - name: Guardar cambios
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add lista.m3u
-          git commit -m "Lista actualizada de canales" || echo "No hay cambios para guardar"
-          git push https://${{ github.token }}@://github.com{{ github.repository }}.git main
+          git commit -m "Lista actualizada" || exit 0
+          git push origin HEAD:main
