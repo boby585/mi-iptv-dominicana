@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout código
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.MY_TOKEN }}
 
       - name: Configurar Python
         uses: actions/setup-python@v5
@@ -25,12 +23,10 @@ jobs:
       - name: Ejecutar script
         run: python actualizador.py
 
-      - name: Guardar cambios
-        env:
-          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
+      - name: Forzar actualización de lista
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add lista.m3u
-          git commit -m "Lista actualizada" || exit 0
-          git push "https://x-access-token:${{ secrets.MY_TOKEN }}@://github.com{{ github.repository }}.git" main
+          git commit -m "Update" || exit 0
+          git push "https://${{ secrets.MY_TOKEN }}@://github.com{{ github.repository }}.git" HEAD:main --force
