@@ -1,17 +1,21 @@
 name: Actualizar Token Color Vision
+
+permissions:
+  contents: write
+
 on:
   schedule:
-    - cron: '0 */3 * * *' # Se ejecuta cada 3 horas
-  workflow_dispatch: # Permite ejecutarlo manualmente para probar
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout código
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Configurar Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: '3.x'
       - name: Instalar librerías
@@ -20,8 +24,8 @@ jobs:
         run: python actualizador.py
       - name: Guardar cambios
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add lista.m3u
           git commit -m "Lista actualizada" || exit 0
           git push
